@@ -136,5 +136,22 @@ namespace Simulator
             }
 
         }
+        public void Go(Direction direction)
+        {
+            string directionName = direction.ToString().ToLower();
+            Console.WriteLine($"{Name} goes {directionName}.");
+        }
+        public void Go(Direction[] directions)
+        {
+            foreach (Direction direction in directions)
+            {
+                Go(direction);
+            }
+        }
+        public void Go(string directions)
+        {
+            Direction[] parsedDirections = DirectionParser.Parse(directions);
+            Go(parsedDirections);
+        }
     }
 }
