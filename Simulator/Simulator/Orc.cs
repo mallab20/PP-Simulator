@@ -8,36 +8,32 @@ namespace Simulator
 {
     public class Orc : Creature
     {
-        private int _rage;
-        private int _huntCount;
+        private int rage;
 
         public int Rage
         {
-            get => _rage;
-            private set => _rage = Validator.Limiter(value, 0, 10);
+            get => rage;
+            private set => rage = Validator.Limiter(value, 0, 10);
         }
-        public override int Power => Level * 7 + Rage * 3;
-        public Orc() : base("Unknown Orc", 1)
-        {
-            Rage = 1;
-        }
+
+        private int huntCount = 0;
+
         public Orc(string name, int level = 1, int rage = 1) : base(name, level)
         {
-            Rage = rage;
+            this.Rage = rage;
         }
-        public override void SayHi()
-        {
-            Console.WriteLine($"Hi, I'm {Name} the Orc, at level {Level}.");
-        }
+
+        public Orc() : base() { }
+        public override string Info => $"{Name} [{Level}][{Rage}]";
+        public override int Power => 7 * Level + 3 * Rage;
+        public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}.");
         public void Hunt()
         {
-            _huntCount++;
             Console.WriteLine($"{Name} is hunting.");
-
-            if (_huntCount % 2 == 0)
+            huntCount++;
+            if (huntCount % 2 == 0)
             {
-                Rage = Validator.Limiter(Rage + 1, 0, 10);
-                Console.WriteLine($"{Name}'s rage increased to {Rage}.");
+                Rage = Math.Min(Rage + 1, 10);
             }
         }
     }

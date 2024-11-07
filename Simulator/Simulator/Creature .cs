@@ -15,14 +15,14 @@ namespace Simulator
 
         public string Name
         {
-            get { return name; }
-            set { name = Validator.Shortener(value, 3, 25, '#'); }
+            get => name;
+            set => name = Validator.Shortener(value, 3, 25, '#');
         }
 
         public int Level
         {
-            get { return level; }
-            set { level = Validator.Limiter(value, 1, 10); }
+            get => level;
+            set => level = Validator.Limiter(value, 1, 10);
         }
 
         public Creature(string? name = "Unknown", int level = 1)
@@ -32,18 +32,14 @@ namespace Simulator
         }
 
         public Creature() : this("Unknown", 1) { }
-
-        public string Info => $"{Name}, Level {Level}";
-
-        public abstract void SayHi();
-
+        public abstract string Info { get; }
         public abstract int Power { get; }
-
+        public abstract void SayHi();
+        public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
         public void Upgrade()
         {
-            Level = Validator.Limiter(Level + 1, 1, 10);
+            Level = Math.Min(Level + 1, 10);
             Console.WriteLine($"{Name} has been upgraded to level {Level}.");
         }
     }
-
 }

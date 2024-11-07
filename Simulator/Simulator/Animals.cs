@@ -8,26 +8,18 @@ using System.Xml.Linq;
 
 namespace Simulator
 {
-    namespace Simulator
+    public class Animals
     {
-        public class Animals
+        private string _description = "Unknown";
+
+        public required string Description { get; init; }
+        public uint Size { get; set; } = 3;
+
+        public virtual string Info => $"{Validator.Shortener(Description, 3, 15, '#')} <{Size}>";
+
+        public override string ToString()
         {
-            private string _description = "Unknown";
-            private uint _size = 3;
-            public string Description
-            {
-                get => _description;
-                init => _description = Validator.Shortener(value, 3, 15, '#');
-            }
-            public uint Size
-            {
-                get => _size;
-                set => _size = (uint)Validator.Limiter((int)value, 1, 100);
-            }
-            public void Info()
-            {
-                Console.WriteLine($"{Description} <{Size}>");
-            }
+            return $"{this.GetType().Name.ToUpper()}: {Info}";
         }
     }
 }
