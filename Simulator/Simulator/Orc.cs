@@ -14,29 +14,31 @@ namespace Simulator
         public int Rage
         {
             get => _rage;
-            private set => _rage = Math.Clamp(value, 0, 10);
+            private set => _rage = Validator.Limiter(value, 0, 10);
         }
-
-        public Orc(string name = "Unknown Orc", int level = 1, int rage = 1) : base(name, level)
+        public override int Power => Level * 7 + Rage * 3;
+        public Orc() : base("Unknown Orc", 1)
+        {
+            Rage = 1;
+        }
+        public Orc(string name, int level = 1, int rage = 1) : base(name, level)
         {
             Rage = rage;
         }
-
-        public Orc() : base() { }
-
-        public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}.");
-
+        public override void SayHi()
+        {
+            Console.WriteLine($"Hi, I'm {Name} the Orc, at level {Level}.");
+        }
         public void Hunt()
         {
-            Console.WriteLine($"{Name} is hunting.");
             _huntCount++;
+            Console.WriteLine($"{Name} is hunting.");
+
             if (_huntCount % 2 == 0)
             {
-                Rage++;
+                Rage = Validator.Limiter(Rage + 1, 0, 10);
                 Console.WriteLine($"{Name}'s rage increased to {Rage}.");
             }
         }
-
-        public override int Power => Level * 7 + Rage * 3;
     }
 }

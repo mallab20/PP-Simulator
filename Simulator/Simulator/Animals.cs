@@ -8,43 +8,26 @@ using System.Xml.Linq;
 
 namespace Simulator
 {
-    public class Animals
+    namespace Simulator
     {
-
-        private string _description = "Unknown";
-
-        public required string Description { get; init; }
-        public uint Size { get; set; } = 3;
-
-        public void Info()
+        public class Animals
         {
-            Console.WriteLine($"{Description} <{Size}>");
-        }
-        private string ValidateDescription(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
+            private string _description = "Unknown";
+            private uint _size = 3;
+            public string Description
             {
-                input = "Unknown";
+                get => _description;
+                init => _description = Validator.Shortener(value, 3, 15, '#');
             }
-
-            input = input.Trim();
-
-            if (input.Length > 15)
+            public uint Size
             {
-                input = input.Substring(0, 15).TrimEnd();
+                get => _size;
+                set => _size = (uint)Validator.Limiter((int)value, 1, 100);
             }
-
-            if (input.Length < 3)
+            public void Info()
             {
-                input = input.PadRight(3, '#');
+                Console.WriteLine($"{Description} <{Size}>");
             }
-
-            if (char.IsLower(input[0]))
-            {
-                input = char.ToUpper(input[0]) + input.Substring(1);
-            }
-
-            return input;
         }
     }
 }

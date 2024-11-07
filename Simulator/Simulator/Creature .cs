@@ -16,13 +16,13 @@ namespace Simulator
         public string Name
         {
             get { return name; }
-            set { name = CheckString(value); }
+            set { name = Validator.Shortener(value, 3, 25, '#'); }
         }
 
         public int Level
         {
             get { return level; }
-            set { level = CheckInt(value); }
+            set { level = Validator.Limiter(value, 1, 10); }
         }
 
         public Creature(string? name = "Unknown", int level = 1)
@@ -33,30 +33,7 @@ namespace Simulator
 
         public Creature() : this("Unknown", 1) { }
 
-        private string CheckString(string inputName)
-        {
-            if (string.IsNullOrWhiteSpace(inputName))
-                inputName = "Unknown";
-
-            inputName = inputName.Trim();
-            if (inputName.Length > 25)
-                inputName = inputName.Substring(0, 25).TrimEnd();
-
-            if (inputName.Length < 3)
-                inputName = inputName.PadRight(3, '#');
-
-            if (char.IsLower(inputName[0]))
-                inputName = char.ToUpper(inputName[0]) + inputName.Substring(1);
-
-            return inputName;
-        }
-
-        private int CheckInt(int inputValue)
-        {
-            return Math.Clamp(inputValue, 1, 10);
-        }
-
-        public string Info => $"{CheckString(Name)}, Level {CheckInt(Level)}";
+        public string Info => $"{Name}, Level {Level}";
 
         public abstract void SayHi();
 
@@ -64,8 +41,9 @@ namespace Simulator
 
         public void Upgrade()
         {
-            Level = Math.Min(Level + 1, 10);
+            Level = Validator.Limiter(Level + 1, 1, 10);
             Console.WriteLine($"{Name} has been upgraded to level {Level}.");
         }
     }
+
 }
