@@ -1,4 +1,5 @@
 ﻿using Simulator;
+using Simulator.Maps;
 
 namespace Simulator
 {
@@ -51,5 +52,28 @@ namespace Simulator
                 Console.WriteLine(ex.Message);
             }
         }
+        static void Lab5b()
+        {
+            SmallSquareMap map = new SmallSquareMap(10);
+
+            Console.WriteLine($"Exist (0,0): {map.Exist(new Point(5, 5))}");
+            Console.WriteLine($"Exist (10,10): {map.Exist(new Point(10, 10))}");
+
+            Console.WriteLine($"Next (5,5) Up: {map.Next(new Point(5, 5), Direction.Up)}");
+            Console.WriteLine($"Next (0,0) Left: {map.Next(new Point(0, 0), Direction.Left)}");
+
+            Console.WriteLine($"NextDiagonal (5,5) Up: {map.NextDiagonal(new Point(5, 5), Direction.Up)}");
+            Console.WriteLine($"NextDiagonal (0,0) Down: {map.NextDiagonal(new Point(0, 0), Direction.Down)}");
+
+            try
+            {
+                SmallSquareMap invalidMap = new SmallSquareMap(3);
+            }
+            catch (ArgumentOutOfRangeException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
     }
 }
