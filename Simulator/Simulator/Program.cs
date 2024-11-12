@@ -8,69 +8,47 @@ namespace Simulator
         {
             Console.WriteLine("Starting Simulator!\n");
 
-            Elf e = new() { Name = "Elandor", Level = 6 };
-            e.SayHi();
-            e.Upgrade();
-            Console.WriteLine(e.Info);
+            Point p = new(10, 25);
+            Console.WriteLine(p.Next(Direction.Right));
+            Console.WriteLine(p.NextDiagonal(Direction.Right));
 
-            Orc o = new("Gorbag", rage: 5);
-            o.SayHi();
-            Console.WriteLine($"{o.Name} / level {o.Level} / rage {o.Rage}");
-
-            Lab4a();
-
-            Lab4b();
+            Lab5a();
         }
-
-        static void Lab4a()
+        static void Lab5a()
         {
-            Console.WriteLine("\nHUNT TEST\n");
-            var o = new Orc("Gorbag", level: 5, rage: 7);
-            o.SayHi();
-            for (int i = 0; i < 10; i++)
+            try
             {
-                o.Hunt();
-                o.SayHi();
+                Console.WriteLine("\nTesty");
+
+                try
+                {
+                    Rectangle rec1 = new Rectangle(8, 2, 8, 2);
+                }
+                catch (ArgumentException ex)
+                {
+                    Console.WriteLine("\nBłąd przy tworzeniu prostokąta: " + ex.Message);
+                }
+
+                Rectangle rec2 = new Rectangle(8, 8, 2, 2);
+                Console.WriteLine("\nUtworzono prostokąt");
+
+                Point p1 = new Point(2, 2);
+                Point p2 = new Point(8, 8);
+                Rectangle rec3 = new Rectangle(p1, p2);
+                Console.WriteLine("\nUtworzono prostokąt " + rec3);
+
+                TestContains(rec3, new Point(4, 4), true);
+                TestContains(rec3, new Point(10, 5), false);
+
+                static void TestContains(Rectangle rec3, Point point, bool expectedResult)
+                {
+                    bool result = rec3.Contains(point);
+                    Console.WriteLine($"\nTest dla punktu {point}: wynik {result}");
+                }
             }
-
-            Console.WriteLine("\nSING TEST\n");
-            var e = new Elf("Legolas", agility: 2);
-            e.SayHi();
-            for (int i = 0; i < 10; i++)
+            catch (Exception ex)
             {
-                e.Sing();
-                e.SayHi();
-            }
-
-            Console.WriteLine("\nPOWER TEST\n");
-            Creature[] creatures = {
-                o,
-                e,
-                new Orc("Morgash", 3, 8),
-                new Elf("Elandor", 5, 3)
-            };
-
-            foreach (Creature creature in creatures)
-            {
-                Console.WriteLine($"{creature.Name,-15}: {creature.Power}");
-            }
-        }
-
-        static void Lab4b()
-        {
-            Console.WriteLine("\nOBJECTS TEST\n");
-
-            object[] myObjects = {
-                new Animals() { Description = "dogs" },
-                new Birds { Description = "  eagles ", Size = 10 },
-                new Elf("e", 15, -3),
-                new Orc("morgash", 6, 4)
-            };
-
-            Console.WriteLine("\nMy objects:");
-            foreach (var o in myObjects)
-            {
-                Console.WriteLine(o);
+                Console.WriteLine(ex.Message);
             }
         }
     }
