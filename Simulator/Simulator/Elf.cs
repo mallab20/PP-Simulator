@@ -26,10 +26,9 @@ namespace Simulator
         public Elf() : base() { }
         public override string Info => $"{Name} [{Level}][{Agility}]";
         public override int Power => 8 * Level + 2 * Agility;
-        public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}.");
+        public string Greeting() => ($"Hi, I'm {Name}, my level is {Level}.");
         public void Sing()
         {
-            Console.WriteLine($"{Name} is singing.");
             singCount++;
             if (singCount % 3 == 0)
             {

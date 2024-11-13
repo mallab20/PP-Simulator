@@ -1,5 +1,6 @@
 ﻿using Simulator;
 using Simulator.Maps;
+using System.Drawing;
 
 namespace Simulator
 {

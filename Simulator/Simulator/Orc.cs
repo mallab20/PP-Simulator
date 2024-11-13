@@ -26,10 +26,9 @@ namespace Simulator
         public Orc() : base() { }
         public override string Info => $"{Name} [{Level}][{Rage}]";
         public override int Power => 7 * Level + 3 * Rage;
-        public override void SayHi() => Console.WriteLine($"Hi, I'm {Name}, my level is {Level}.");
+        public string Greeting() => ($"Hi, I'm {Name}, my level is {Level}.");
         public void Hunt()
         {
-            Console.WriteLine($"{Name} is hunting.");
             huntCount++;
             if (huntCount % 2 == 0)
             {

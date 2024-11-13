@@ -12,6 +12,7 @@ namespace Simulator
     {
         private string name;
         private int level;
+        public string Greeting;
 
         public string Name
         {
@@ -31,10 +32,26 @@ namespace Simulator
             this.Level = level;
         }
 
+        string Go(Direction direction) => $"{direction.ToString().ToLower()}";
+
+        public string[] Go(Direction[] directions)
+        {
+            var result = new string[directions.Length];
+
+            for (int i = 0; i < directions.Length; i++)
+            {
+                result[i] = Go(directions[i]);
+            }
+            return result;
+        }
+
+        public string[] Go(string directionSeq) =>
+            Go(DirectionParser.Parse(directionSeq));
+
+
         public Creature() : this("Unknown", 1) { }
         public abstract string Info { get; }
         public abstract int Power { get; }
-        public abstract void SayHi();
         public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
         public void Upgrade()
         {
