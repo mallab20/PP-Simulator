@@ -7,11 +7,8 @@ public class DirectionParserTests
     [Fact]
     public void Parse_ShouldParseDirectionsCorrectly()
     {
-        // Arrange
         string input = "URDL";
-        // Act
         var result = DirectionParser.Parse(input);
-        // Assert
         Assert.Equal([Direction.Up, Direction.Right,
             Direction.Down, Direction.Left],
             result
@@ -21,11 +18,8 @@ public class DirectionParserTests
     [Fact]
     public void Parse_ShouldHandleLowercaseLetters()
     {
-        // Arrange
         string input = "urdl";
-        // Act
         var result = DirectionParser.Parse(input);
-        // Assert
         Assert.Equal([Direction.Up, Direction.Right,
             Direction.Down, Direction.Left],
             result
@@ -34,12 +28,9 @@ public class DirectionParserTests
 
     [Fact]
     public void Parse_ShouldReturnEmptyArrayForEmptyString()
-    {
-        // Arrange
+    {    
         string input = "";
-        // Act
         var result = DirectionParser.Parse(input);
-        // Assert
         Assert.Empty(result);
     }
 
@@ -53,11 +44,7 @@ public class DirectionParserTests
     public void Parse_ShouldIgnoreInvalidCharacters(string s,
         Direction[] expected)
     {
-        // Arrange 
-        // use [Theory] [InlineData] to check multiple sets of data
-        // Act
         var result = DirectionParser.Parse(s);
-        // Assert
         Assert.Equal(expected, result);
     }
 }
