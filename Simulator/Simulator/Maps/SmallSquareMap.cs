@@ -10,7 +10,7 @@ namespace Simulator.Maps
     public class SmallSquareMap : SmallMap
     {
 
-        public SmallSquareMap(int sizeX, int size, Y ) : base(sizeX, size, )
+        public SmallSquareMap(int sizeX, int sizeY ) : base(sizeX, sizeY )
         {
         }
 

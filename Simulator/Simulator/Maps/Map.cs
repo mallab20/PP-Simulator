@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,22 +14,32 @@ namespace Simulator.Maps
     /// </summary>
     public abstract class Map
     {
+
+        public abstract void Add(Creature creature, Point position);
+        public abstract void Remove(Creature creature, Point position);
+
+        public abstract List<Creature>? At(int x, int y);
+
+
         protected Map(int sizeX, int sizeY)
         {
             if (sizeX < 5)
             {
-                throw ArgumentOutOfRangeException(nameof(sizeX), "Too narrow.");
+                throw new ArgumentOutOfRangeException(nameof(sizeX), "Too narrow.");
 
             }
             if (sizeX < 5)
             {
-                throw ArgumentOutOfRangeException(nameof(sizeY), "Too shorts.");
+                throw new ArgumentOutOfRangeException(nameof(sizeY), "Too shorts.");
 
             }
             SizeX = sizeX;
             SizeY = sizeY;
-
         }
+
+        public int SizeX { get;  }
+        public int SizeY { get; }
+
 
         /// <summary>
         /// Check if give point belongs to the map.

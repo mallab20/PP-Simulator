@@ -6,10 +6,21 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 
+using Simulator.Maps;
+using Simulator;
+
 namespace Simulator
 {
     public abstract class Creature
     {
+
+        public Map? Map { get; private set; }
+        public Point Position { get; private set; }
+
+        public void InitMapAndPosition(Map map, Point position) { }
+
+
+
         private string name;
         private int level;
         public string Greeting;
@@ -32,7 +43,7 @@ namespace Simulator
             this.Level = level;
         }
 
-        string Go(Direction direction) => $"{direction.ToString().ToLower()}";
+        string Go(Direction direction) => $"{direction.ToString().ToLower()}"; //zgodnie z regułami mapys
 
         public string[] Go(Direction[] directions)
         {
@@ -45,6 +56,7 @@ namespace Simulator
             return result;
         }
 
+        /*
         public string[] Go(string directionSeq) =>
             Go(DirectionParser.Parse(directionSeq));
 
@@ -58,5 +70,8 @@ namespace Simulator
             Level = Math.Min(Level + 1, 10);
             Console.WriteLine($"{Name} has been upgraded to level {Level}.");
         }
+
+        */
+
     }
 }
