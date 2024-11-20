@@ -6,11 +6,30 @@ using System.Threading.Tasks;
 
 namespace Simulator.Maps
 {
+ 
+
     /// <summary>
     /// Map of points.
     /// </summary>
     public abstract class Map
     {
+        protected Map(int sizeX, int sizeY)
+        {
+            if (sizeX < 5)
+            {
+                throw ArgumentOutOfRangeException(nameof(sizeX), "Too narrow.");
+
+            }
+            if (sizeX < 5)
+            {
+                throw ArgumentOutOfRangeException(nameof(sizeY), "Too shorts.");
+
+            }
+            SizeX = sizeX;
+            SizeY = sizeY;
+
+        }
+
         /// <summary>
         /// Check if give point belongs to the map.
         /// </summary>

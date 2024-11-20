@@ -7,10 +7,13 @@ using System;
 
 namespace Simulator.Maps
 {
-    public class SmallSquareMap : Map
+    public class SmallSquareMap : SmallMap
     {
-        public int Size { get; }
-        private readonly Rectangle bounds;
+
+        public SmallSquareMap(int sizeX, int size, Y ) : base(sizeX, size, )
+        {
+        }
+
         public SmallSquareMap(int size)
         {
             if (size < 5 || size > 20)
@@ -19,6 +22,7 @@ namespace Simulator.Maps
             Size = size;
             bounds = new Rectangle(0, 0, Size - 1, Size - 1);
         }
+
         public override bool Exist(Point p)
         {
             return bounds.Contains(p);
