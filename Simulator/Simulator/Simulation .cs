@@ -1,67 +1,74 @@
-﻿using Simulator.Maps;
+﻿using Simulator;
+using Simulator.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace Simulator
+public class Simulation
 {
-    public class Simulation
+    private int _currentTurn;
+    private readonly List<Direction> _parsedMoves;
+
+    public Map Map { get; }
+    public List<Creature> Creatures { get; }
+    public List<Point> Positions { get; }
+    public string Moves { get; }
+    public bool Finished { get; private set; }
+
+    public Creature CurrentCreature => Creatures[_currentTurn % Creatures.Count];
+    public string CurrentMoveName => _parsedMoves[_currentTurn % _parsedMoves.Count].ToString().ToLower();
+
+    public Simulation(Map map, List<Creature> creatures, List<Point> positions, string moves)
     {
-        /// <summary>
-        /// Simulation's map.
-        /// </summary>
-        public Map Map { get; }
+        if (creatures == null || creatures.Count == 0)
+            throw new ArgumentException("Creatures list cannot be empty.", nameof(creatures));
 
-        /// <summary>
-        /// Creatures moving on the map.
-        /// </summary>
-        public List<Creature> Creatures { get; }
+        if (positions == null || positions.Count != creatures.Count)
+            throw new ArgumentException("Number of positions must match the number of creatures.", nameof(positions));
 
-        /// <summary>
-        /// Starting positions of creatures.
-        /// </summary>
-        public List<Point> Positions { get; }
+        if (string.IsNullOrEmpty(moves))
+            throw new ArgumentException("Moves string cannot be empty.", nameof(moves));
 
-        /// <summary>
-        /// Cyclic list of creatures moves. 
-        /// Bad moves are ignored - use DirectionParser.
-        /// First move is for first creature, second for second and so on.
-        /// When all creatures make moves, 
-        /// next move is again for first creature and so on.
-        /// </summary>
-        public string Moves { get; }
+        Map = map;
+        Creatures = creatures;
+        Positions = positions;
+        Moves = moves;
 
-        /// <summary>
-        /// Has all moves been done?
-        /// </summary>
-        public bool Finished = false;
+        _parsedMoves = DirectionParser.Parse(moves);
+        if (_parsedMoves.Count == 0)
+            throw new ArgumentException("No valid moves found in the moves string.", nameof(moves));
 
-        /// <summary>
-        /// Creature which will be moving current turn.
-        /// </summary>
-        public Creature CurrentCreature { /* implement getter only */ }
+        _currentTurn = 0;
+        Finished = false;
 
-        /// <summary>
-        /// Lowercase name of direction which will be used in current turn.
-        /// </summary>
-        public string CurrentMoveName { /* implement getter only */ }
-
-        /// <summary>
-        /// Simulation constructor.
-        /// Throw errors:
-        /// if creatures' list is empty,
-        /// if number of creatures differs from 
-        /// number of starting positions.
-        /// </summary>
-        public Simulation(Map map, List<Creature> creatures,
-            List<Point> positions, string moves)
-        { /* implement */ }
-
-        /// <summary>
-        /// Makes one move of current creature in current direction.
-        /// Throw error if simulation is finished.
-        /// </summary>
-        public void Turn() { /* implement */ }
+        for (int i = 0; i < Creatures.Count; i++)
+        {
+            Map.Add(Creatures[i], Positions[i]);
+        }
     }
+
+    public void Turn()
+    {
+        if (Finished)
+            throw new InvalidOperationException("Simulation is already finished.");
+
+        Creature currentCreature = CurrentCreature;
+        Point currentPosition = currentCreature.Position;
+        Direction currentDirection = _parsedMoves[_currentTurn % _parsedMoves.Count];
+
+        Point nextPosition = Map.Next(currentPosition, currentDirection);
+
+        if (!nextPosition.Equals(currentPosition))
+        {
+            Map.Remove(currentCreature, currentPosition);
+            Map.Add(currentCreature, nextPosition);
+        }
+
+        _currentTurn++;
+        if (_currentTurn >= _parsedMoves.Count * Creatures.Count)
+        {
+            Finished = true;
+        }
+    }
+}

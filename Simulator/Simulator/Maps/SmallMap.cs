@@ -23,7 +23,7 @@ namespace Simulator.Maps
                 throw new ArgumentOutOfRangeException(nameof(sizeY), "Too high.");
 
             }
-            _fields = new List<Creature>?[sizeX, sizeY];s
+            _fields = new List<Creature>?[sizeX, sizeY];
         }
     }
 }

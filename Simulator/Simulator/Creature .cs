@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 
 using Simulator.Maps;
-using Simulator;
-
 namespace Simulator
 {
     public abstract class Creature
     {
-
         public Map? Map { get; private set; }
         public Point Position { get; private set; }
 
-        public void InitMapAndPosition(Map map, Point position) { }
-
-
+        public void InitMapAndPosition(Map map, Point position)
+        {
+            Map = map;
+            Position = position;
+        }
 
         private string name;
         private int level;
@@ -39,11 +38,11 @@ namespace Simulator
 
         public Creature(string? name = "Unknown", int level = 1)
         {
-            this.Name = name;
-            this.Level = level;
+            Name = name;
+            Level = level;
         }
 
-        string Go(Direction direction) => $"{direction.ToString().ToLower()}"; //zgodnie z regułami mapys
+        public string Go(Direction direction) => $"{direction.ToString().ToLower()}";
 
         public string[] Go(Direction[] directions)
         {
@@ -55,23 +54,6 @@ namespace Simulator
             }
             return result;
         }
-
-        /*
-        public string[] Go(string directionSeq) =>
-            Go(DirectionParser.Parse(directionSeq));
-
-
-        public Creature() : this("Unknown", 1) { }
-        public abstract string Info { get; }
-        public abstract int Power { get; }
-        public override string ToString() => $"{GetType().Name.ToUpper()}: {Info}";
-        public void Upgrade()
-        {
-            Level = Math.Min(Level + 1, 10);
-            Console.WriteLine($"{Name} has been upgraded to level {Level}.");
-        }
-
-        */
-
     }
 }
+

@@ -8,7 +8,7 @@ namespace Simulator
 {
     public static class DirectionParser
     {
-        public static Direction[] Parse(string input)
+        public static List<Direction> Parse(string input)
         {
             var directions = new List<Direction>();
 
@@ -24,7 +24,7 @@ namespace Simulator
                     directions.Add(Direction.Left);
             }
 
-            return directions.ToArray();
+            return directions;
         }
     }
 }
