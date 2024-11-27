@@ -27,21 +27,21 @@ namespace Simulator.Maps
                 throw new ArgumentOutOfRangeException(nameof(size), "Nieprawidłowy rozmiar mapy.");
         }
 
-        public override void Add(Creature creature, Point position)
+        public override void Add(Creature mappable, Point position)
         {
             if (!Exist(position))
                 throw new ArgumentException("Pozycja jest poza granicami mapy.");
 
-            _fields[position.X, position.Y].Add(creature);
-            creature.InitMapAndPosition(this, position);
+            _fields[position.X, position.Y].Add(mappable);
+            mappable.InitMapAndPosition(this, position);
         }
 
-        public override void Remove(Creature creature, Point position)
+        public override void Remove(Creature mappable, Point position)
         {
             if (!Exist(position))
                 throw new ArgumentException("Pozycja jest poza granicami mapy.");
 
-            _fields[position.X, position.Y].Remove(creature);
+            _fields[position.X, position.Y].Remove(mappable);
         }
 
         public override List<Creature>? At(int x, int y)
