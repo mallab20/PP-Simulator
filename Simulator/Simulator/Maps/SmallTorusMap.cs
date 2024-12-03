@@ -2,41 +2,22 @@
 
 namespace Simulator.Maps
 {
-    public class SmallTorusMap : Map
+    public class SmallTorusMap : SmallMap
     {
-        private readonly List<IMappable>[,] _fields;
-
-        public SmallTorusMap(int sizeX, int sizeY) : base(sizeX, sizeY)
-        {
-            _fields = new List<IMappable>[sizeX, sizeY];
-            for (int x = 0; x < sizeX; x++)
-                for (int y = 0; y < sizeY; y++)
-                    _fields[x, y] = new List<IMappable>();
-        }
+        public SmallTorusMap(int sizeX, int sizeY) : base(sizeX, sizeY) { }
 
         public override void Add(IMappable mappable, Point position)
         {
             var normalizedX = (position.X % SizeX + SizeX) % SizeX;
             var normalizedY = (position.Y % SizeY + SizeY) % SizeY;
-
-            _fields[normalizedX, normalizedY].Add(mappable);
-            mappable.InitMapAndPosition(this, new Point(normalizedX, normalizedY));
+            base.Add(mappable, new Point(normalizedX, normalizedY));
         }
 
         public override void Remove(IMappable mappable, Point position)
         {
             var normalizedX = (position.X % SizeX + SizeX) % SizeX;
             var normalizedY = (position.Y % SizeY + SizeY) % SizeY;
-
-            _fields[normalizedX, normalizedY].Remove(mappable);
-        }
-
-        public override List<IMappable>? At(int x, int y)
-        {
-            var normalizedX = (x % SizeX + SizeX) % SizeX;
-            var normalizedY = (y % SizeY + SizeY) % SizeY;
-
-            return _fields[normalizedX, normalizedY];
+            base.Remove(mappable, new Point(normalizedX, normalizedY));
         }
 
         public override bool Exist(Point p)
