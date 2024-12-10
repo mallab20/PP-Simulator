@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace Simulator.Maps
 {
     public abstract class SmallMap : Map
@@ -20,14 +19,9 @@ namespace Simulator.Maps
 
         protected SmallMap(int sizeX, int sizeY) : base(sizeX, sizeY)
         {
-            if (sizeX > 20)
+            if (sizeX > 20 || sizeY > 20)
             {
-                throw new ArgumentOutOfRangeException(nameof(sizeX), "Too wide.");
-            }
-
-            if (sizeY > 20)
-            {
-                throw new ArgumentOutOfRangeException(nameof(sizeY), "Too high.");
+                throw new ArgumentOutOfRangeException("Rozmiar mapy jest zbyt duży dla SmallMap.");
             }
 
             _fields = new List<IMappable>?[sizeX, sizeY];
@@ -36,10 +30,7 @@ namespace Simulator.Maps
                     _fields[x, y] = new List<IMappable>();
         }
 
-        /// <summary>
-        /// Adds an object to the map at the specified position.
-        /// </summary>
-        public virtual void Add(IMappable mappable, Point position)
+        public override void Add(IMappable mappable, Point position)
         {
             if (!Exist(position))
                 throw new ArgumentException("Position is out of bounds.");
@@ -53,10 +44,7 @@ namespace Simulator.Maps
             }
         }
 
-        /// <summary>
-        /// Removes an object from the map at the specified position.
-        /// </summary>
-        public virtual void Remove(IMappable mappable, Point position)
+        public override void Remove(IMappable mappable, Point position)
         {
             if (!Exist(position))
                 throw new ArgumentException("Position is out of bounds.");

@@ -21,9 +21,6 @@ namespace Simulator.Maps
                 throw new ArgumentOutOfRangeException(nameof(size), "Nieprawidłowy rozmiar mapy.");
         }
 
-        /// <summary>
-        /// Add an IMappable object to the map at a specific position.
-        /// </summary>
         public override void Add(IMappable mappable, Point position)
         {
             if (!Exist(position))
@@ -44,10 +41,6 @@ namespace Simulator.Maps
                 throw new InvalidOperationException("Nie można dodać obiektu - pole jest null.");
             }
         }
-
-        /// <summary>
-        /// Remove an IMappable object from the map at a specific position.
-        /// </summary>
         public override void Remove(IMappable mappable, Point position)
         {
             if (!Exist(position))
@@ -66,27 +59,15 @@ namespace Simulator.Maps
                 throw new InvalidOperationException("Nie można usunąć obiektu - pole jest null.");
             }
         }
-
-        /// <summary>
-        /// Check if a point exists within the bounds of the map.
-        /// </summary>
         public override bool Exist(Point p)
         {
             return bounds.Contains(p);
         }
-
-        /// <summary>
-        /// Get the next point in a given direction.
-        /// </summary>
         public override Point Next(Point p, Direction d)
         {
             var nextPoint = p.Next(d);
             return Exist(nextPoint) ? nextPoint : p;
         }
-
-        /// <summary>
-        /// Get the next diagonal point in a given direction rotated 45 degrees clockwise.
-        /// </summary>
         public override Point NextDiagonal(Point p, Direction d)
         {
             var nextPoint = p.NextDiagonal(d);

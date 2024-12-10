@@ -1,18 +1,17 @@
 ﻿using Simulator;
+using Simulator.Maps;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-
-using Simulator.Maps;
 namespace Simulator
 {
     public abstract class Creature : IMappable
     {
-        public Map? Map { get; private set; }
-        public Point Position { get; private set; }
+        public Map? Map { get; set; }
+        public Point Position { get; set; }
 
         public void InitMapAndPosition(Map map, Point position)
         {
@@ -41,6 +40,8 @@ namespace Simulator
             Name = name;
             Level = level;
         }
+        public abstract string Info { get; }
+        public abstract int Power { get; }
 
         public string Go(Direction direction) => $"{direction.ToString().ToLower()}";
 
@@ -56,4 +57,3 @@ namespace Simulator
         }
     }
 }
-

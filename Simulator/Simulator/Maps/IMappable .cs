@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Simulator.Maps;
-
-public interface IMappable
+namespace Simulator.Maps
 {
+    public interface IMappable
+    {
+        Point Position { get; }
+    }
 }
