@@ -10,72 +10,13 @@ namespace Simulator.Maps
 {
     public class BigMap : Map
     {
-        private readonly Dictionary<Point, List<IMappable>> _fields;
-
         public BigMap(int sizeX, int sizeY) : base(sizeX, sizeY)
         {
             if (sizeX > 1000 || sizeY > 1000)
-            {
-                throw new ArgumentOutOfRangeException("Rozmiar mapy przekracza dopuszczalny limit.");
-            }
-
-            _fields = new Dictionary<Point, List<IMappable>>();
+                throw new ArgumentOutOfRangeException("Wymiary nie mogą przekraczać 1000x1000.");
         }
 
-        public override void Add(IMappable mappable, Point position)
-        {
-            if (!Exist(position))
-                throw new ArgumentException("Pozycja jest poza granicami mapy.");
-
-            if (!_fields.ContainsKey(position))
-            {
-                _fields[position] = new List<IMappable>();
-            }
-
-            _fields[position].Add(mappable);
-
-            if (mappable is Creature creature)
-            {
-                creature.InitMapAndPosition(this, position);
-            }
-        }
-
-        public override void Remove(IMappable mappable, Point position)
-        {
-            if (!Exist(position))
-                throw new ArgumentException("Pozycja jest poza granicami mapy.");
-
-            if (_fields.ContainsKey(position))
-            {
-                _fields[position].Remove(mappable);
-
-                if (_fields[position].Count == 0)
-                {
-                    _fields.Remove(position);
-                }
-            }
-        }
-
-        public override List<IMappable>? At(int x, int y)
-        {
-            var point = new Point(x, y);
-            return At(point);
-        }
-
-        public override List<IMappable>? At(Point p)
-        {
-            if (_fields.ContainsKey(p))
-            {
-                return _fields[p];
-            }
-
-            return null;
-        }
-
-        public override bool Exist(Point p)
-        {
-            return p.X >= 0 && p.X < SizeX && p.Y >= 0 && p.Y < SizeY;
-        }
+        public override bool Exist(Point p) => p.X >= 0 && p.X < SizeX && p.Y >= 0 && p.Y < SizeY;
 
         public override Point Next(Point p, Direction d)
         {

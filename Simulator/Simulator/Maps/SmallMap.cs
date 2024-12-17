@@ -5,52 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 namespace Simulator.Maps
 {
-    public abstract class SmallMap : Map
+    public class SmallMap : Map
     {
-        private readonly List<IMappable>?[,] _fields;
-
-        public override List<IMappable>? At(int x, int y)
+        public SmallMap(int sizeX, int sizeY) : base(sizeX, sizeY)
         {
-            if (x < 0 || x >= SizeX || y < 0 || y >= SizeY)
-                return null;
-
-            return _fields[x, y];
+            if (sizeX > 50 || sizeY > 50)
+                throw new ArgumentOutOfRangeException("Wymiary nie mogą przekraczać 50x50.");
         }
 
-        protected SmallMap(int sizeX, int sizeY) : base(sizeX, sizeY)
-        {
-            if (sizeX > 20 || sizeY > 20)
-            {
-                throw new ArgumentOutOfRangeException("Rozmiar mapy jest zbyt duży dla SmallMap.");
-            }
+        public override bool Exist(Point p) => p.X >= 0 && p.X < SizeX && p.Y >= 0 && p.Y < SizeY;
 
-            _fields = new List<IMappable>?[sizeX, sizeY];
-            for (int x = 0; x < sizeX; x++)
-                for (int y = 0; y < sizeY; y++)
-                    _fields[x, y] = new List<IMappable>();
+        public override Point Next(Point p, Direction d)
+        {
+            var nextPoint = p.Next(d);
+            return Exist(nextPoint) ? nextPoint : p;
         }
 
-        public override void Add(IMappable mappable, Point position)
+        public override Point NextDiagonal(Point p, Direction d)
         {
-            if (!Exist(position))
-                throw new ArgumentException("Position is out of bounds.");
-
-            var listAtPosition = _fields[position.X, position.Y];
-            listAtPosition?.Add(mappable);
-
-            if (mappable is Creature creature)
-            {
-                creature.InitMapAndPosition(this, position);
-            }
-        }
-
-        public override void Remove(IMappable mappable, Point position)
-        {
-            if (!Exist(position))
-                throw new ArgumentException("Position is out of bounds.");
-
-            var listAtPosition = _fields[position.X, position.Y];
-            listAtPosition?.Remove(mappable);
+            var nextPoint = p.NextDiagonal(d);
+            return Exist(nextPoint) ? nextPoint : p;
         }
     }
 }

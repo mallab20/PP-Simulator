@@ -4,58 +4,81 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System;
+using System.Collections.Generic;
+
 namespace Simulator.Maps
 {
-    /// <summary>
-    /// Map of points.
-    /// </summary>
     public abstract class Map
     {
-        public abstract List<IMappable>? At(Point p);
-
-        public abstract List<IMappable>? At(int x, int y);
-
-        protected Map(int sizeX, int sizeY)
-        {
-            if (sizeX < 5)
-            {
-                throw new ArgumentOutOfRangeException(nameof(sizeX), "Too narrow.");
-            }
-            if (sizeY < 5)
-            {
-                throw new ArgumentOutOfRangeException(nameof(sizeY), "Too short.");
-            }
-            SizeX = sizeX;
-            SizeY = sizeY;
-        }
+        protected readonly Dictionary<Point, List<IMappable>> Fields;
 
         public int SizeX { get; }
         public int SizeY { get; }
 
-        /// <summary>
-        /// Check if a given point belongs to the map.
-        /// </summary>
-        /// <param name="p">Point to check.</param>
+        protected Map(int sizeX, int sizeY)
+        {
+            if (sizeX < 5 || sizeY < 5)
+                throw new ArgumentOutOfRangeException("Wymiary mapy muszą być większe niż 5x5.");
+
+            SizeX = sizeX;
+            SizeY = sizeY;
+            Fields = new Dictionary<Point, List<IMappable>>();
+        }
+        public virtual void Add(IMappable mappable, Point position)
+        {
+            var wrappedPosition = WrapPosition(position);
+
+            if (!Fields.ContainsKey(wrappedPosition))
+            {
+                Fields[wrappedPosition] = new List<IMappable>();
+            }
+
+            Fields[wrappedPosition].Add(mappable);
+
+            if (mappable is Creature creature)
+            {
+                creature.InitMapAndPosition(this, wrappedPosition);
+            }
+        }
+
+        public virtual void Remove(IMappable mappable, Point position)
+        {
+            var wrappedPosition = WrapPosition(position);
+
+            if (Fields.ContainsKey(wrappedPosition))
+            {
+                Fields[wrappedPosition].Remove(mappable);
+
+                if (Fields[wrappedPosition].Count == 0)
+                {
+                    Fields.Remove(wrappedPosition);
+                }
+            }
+        }
+   
+        public virtual List<IMappable>? At(int x, int y)
+        {
+            var wrappedPosition = WrapPosition(new Point(x, y));
+
+            if (Fields.ContainsKey(wrappedPosition))
+            {
+                return Fields[wrappedPosition];
+            }
+
+            return null;
+        }
+
+        public virtual List<IMappable>? At(Point p)
+        {
+            return At(p.X, p.Y);
+        }
         public abstract bool Exist(Point p);
-
-        /// <summary>
-        /// Next position to the point in a given direction.
-        /// </summary>
         public abstract Point Next(Point p, Direction d);
-
-        /// <summary>
-        /// Next diagonal position to the point in a given direction rotated 45 degrees clockwise.
-        /// </summary>
         public abstract Point NextDiagonal(Point p, Direction d);
-
-        /// <summary>
-        /// Add an object to the map at a specific position.
-        /// </summary>
-        public abstract void Add(IMappable mappable, Point position);
-
-        /// <summary>
-        /// Remove an object from the map at a specific position.
-        /// </summary>
-        public abstract void Remove(IMappable mappable, Point position);
+        protected virtual Point WrapPosition(Point position)
+        {
+            return position;
+        }
     }
 }
