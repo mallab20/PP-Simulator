@@ -6,70 +6,54 @@ namespace Simulator
 {
     public class SimulationHistory
     {
-        private readonly Map _map;
-        private readonly List<HistoryEntry> _history;
+        private readonly Simulation _simulation;
+        public int SizeX { get; }
+        public int SizeY { get; }
+        public List<SimulationTurnLog> TurnLogs { get; } = new();
 
-        public SimulationHistory(Map map)
+        public SimulationHistory(Simulation simulation)
         {
-            _map = map;
-            _history = new List<HistoryEntry>();
+            _simulation = simulation ?? throw new ArgumentNullException(nameof(simulation));
+            SizeX = _simulation.Map.SizeX;
+            SizeY = _simulation.Map.SizeY;
+            Run();
         }
 
-        /// <param name="turnNumber">Numer tury.</param>
-        /// <param name="movedObject">Obiekt, który wykonał ruch.</param>
-        /// <param name="movement">Wykonany ruch.</param>
-        public void RecordTurn(int turnNumber, IMappable movedObject, Direction movement)
+        private void Run()
         {
-            var stateSnapshot = new Dictionary<Point, List<IMappable>>();
-
-            for (int x = 0; x < _map.SizeX; x++)
+            while (!_simulation.Finished)
             {
-                for (int y = 0; y < _map.SizeY; y++)
+                var log = RecordTurn();
+                TurnLogs.Add(log);
+                _simulation.Turn();
+            }
+        }
+
+        private SimulationTurnLog RecordTurn()
+        {
+            var currentMapState = new Dictionary<Point, char>();
+            for (int x = 0; x < SizeX; x++)
+            {
+                for (int y = 0; y < SizeY; y++)
                 {
                     var position = new Point(x, y);
-                    var objectsAtPosition = _map.At(position);
+                    var objectsAtPosition = _simulation.Map.At(position);
 
                     if (objectsAtPosition != null && objectsAtPosition.Count > 0)
                     {
-                        stateSnapshot[position] = new List<IMappable>(objectsAtPosition);
+                        currentMapState[position] = objectsAtPosition[0].Symbol;
                     }
                 }
             }
-            _history.Add(new HistoryEntry(turnNumber, stateSnapshot, movedObject, movement));
-        }
-        /// <param name="turnNumber">Numer tury.</param>
-        public void ReplayTurn(int turnNumber)
-        {
-            var entry = _history.Find(e => e.TurnNumber == turnNumber);
-            if (entry == null)
+            var currentMappable = _simulation.CurrentIMappable;
+            var currentMove = _simulation.CurrentMoveName;
+
+            return new SimulationTurnLog
             {
-                Console.WriteLine($"Tura {turnNumber} nie istnieje w historii.");
-                return;
-            }
-
-            Console.WriteLine($"Odtwarzanie tury {turnNumber}:");
-            Console.WriteLine($"Obiekt: {entry.MovedObject.GetType().Name} wykonał ruch: {entry.Movement}");
-
-            foreach (var kvp in entry.StateSnapshot)
-            {
-                Console.WriteLine($"Pozycja {kvp.Key}: {string.Join(", ", kvp.Value)}");
-            }
-        }
-
-        private class HistoryEntry
-        {
-            public int TurnNumber { get; }
-            public Dictionary<Point, List<IMappable>> StateSnapshot { get; }
-            public IMappable MovedObject { get; }
-            public Direction Movement { get; }
-
-            public HistoryEntry(int turnNumber, Dictionary<Point, List<IMappable>> stateSnapshot, IMappable movedObject, Direction movement)
-            {
-                TurnNumber = turnNumber;
-                StateSnapshot = stateSnapshot;
-                MovedObject = movedObject;
-                Movement = movement;
-            }
+                Mappable = currentMappable.ToString(),
+                Move = currentMove,
+                Symbols = currentMapState
+            };
         }
     }
 }
