@@ -8,13 +8,17 @@ namespace Simulator.Maps
 {
     public class SmallSquareMap : SmallMap
     {
-        private readonly Rectangle bounds;
+        //private readonly Rectangle bounds;
 
-        public SmallSquareMap(int sizeX, int sizeY) : base(sizeX, sizeY)
+        public SmallSquareMap(int size) : base(size, size)
         {
-            bounds = new Rectangle(0, 0, sizeX - 1, sizeY - 1);
+            FNext = MoveRules.WallNext;
+            FNextDiagonal = MoveRules.WallNextDiagonal;
+
+            //bounds = new Rectangle(0, 0, sizeX - 1, sizeY - 1);
         }
 
+        /*
         public SmallSquareMap(int size) : this(size, size)
         {
             if (size < 5 || size > 20)
@@ -63,15 +67,6 @@ namespace Simulator.Maps
         {
             return bounds.Contains(p);
         }
-        public override Point Next(Point p, Direction d)
-        {
-            var nextPoint = p.Next(d);
-            return Exist(nextPoint) ? nextPoint : p;
-        }
-        public override Point NextDiagonal(Point p, Direction d)
-        {
-            var nextPoint = p.NextDiagonal(d);
-            return Exist(nextPoint) ? nextPoint : p;
-        }
+         */
     }
 }

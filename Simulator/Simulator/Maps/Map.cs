@@ -16,6 +16,9 @@ namespace Simulator.Maps
         public int SizeX { get; }
         public int SizeY { get; }
 
+        protected Func<Map,Point,Direction, Point>? FNext { get; set;  }
+        protected Func<Map,Point,Direction, Point>? FNextDiagonal { get; set;  }
+
         protected Map(int sizeX, int sizeY)
         {
             if (sizeX < 5 || sizeY < 5)
@@ -74,8 +77,9 @@ namespace Simulator.Maps
             return At(p.X, p.Y);
         }
         public abstract bool Exist(Point p);
-        public abstract Point Next(Point p, Direction d);
-        public abstract Point NextDiagonal(Point p, Direction d);
+        public Point Next(Point p, Direction d) => FNext?.Invoke(this, p, d) ?? p;
+
+        public Point NextDiagonal(Point p, Direction d) => FNextDiagonal?.Invoke(this, p, d) ?? p;
         protected virtual Point WrapPosition(Point position)
         {
             return position;
